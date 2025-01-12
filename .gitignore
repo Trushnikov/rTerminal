@@ -1,6 +1,9 @@
-terminal4.tsetting
+.DS_Store
 app.settings
+terminal4.tsetting
 terminal3.tsetting
 terminal2.tsetting
 terminal.tsetting
-.DS_Store
+terminal/app/win/rTerminal
+terminal/app/linux/rTerminal
+terminal/app/macos/rTerminal
