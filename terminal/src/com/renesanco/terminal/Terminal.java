@@ -13,13 +13,12 @@ import jssc.SerialPortException;
 public class Terminal {
 
     private final TerminalSettings terminalSettings;
-    private final SerialPort sp;
+    private SerialPort sp;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private byte[] receivedBuffer;
 
     public Terminal(TerminalSettings settings) {
         terminalSettings = settings;
-        sp = new SerialPort(terminalSettings.getPortName());
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -50,6 +49,7 @@ public class Terminal {
     }
 
     public void connect() throws SerialPortException {
+        sp = new SerialPort(terminalSettings.getPortName());
         sp.openPort();
         sp.setParams(terminalSettings.getPortBaud(), terminalSettings.getPortDatabits(), terminalSettings.getPortStopBits(), terminalSettings.getPortParity());
         try {
@@ -60,12 +60,14 @@ public class Terminal {
     }
 
     public Boolean isConnected() {
-        return sp.isOpened();
+        return (sp != null) ? sp.isOpened() : false;
     }
 
     public void disconnect() throws SerialPortException {
-        sp.removeEventListener();
-        sp.closePort();
+        if (sp != null) {
+            sp.removeEventListener();
+            sp.closePort();
+        }
     }
 
     public void send(String msg) throws Exception {

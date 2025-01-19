@@ -86,7 +86,7 @@ public class SplashWindow extends Application {
                 if (opacity >= 1.0) {
                     this.timer.cancel();
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         System.out.println(ex.getMessage());
                     }

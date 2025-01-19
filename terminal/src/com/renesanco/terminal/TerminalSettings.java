@@ -27,6 +27,10 @@ public final class TerminalSettings {
         LfCr
     }
 
+    public static final int BINARY_BYTES_PER_LINE_MIN = 1;
+    public static final int BINARY_BYTES_PER_LINE_MAX = 80;
+    public static final int BINARY_BYTES_PER_LINE_DEFAULT = 16;
+
     public boolean isChanged = false;
 
     private String currentSettingsFileLocation = "";
@@ -38,6 +42,7 @@ public final class TerminalSettings {
     private TerminalType terminalType = TerminalType.String;
     private Boolean displayTimestamp = false;
     private LineTerminator lineTerminator = LineTerminator.None;
+    private int binaryModeBytesPerLine = BINARY_BYTES_PER_LINE_DEFAULT;
 
     public TerminalSettings(String settingsFileLocation) {
         currentSettingsFileLocation = settingsFileLocation;
@@ -65,6 +70,7 @@ public final class TerminalSettings {
                     portParity = settingsJson.getInt("PortParity");
                     portStopBits = settingsJson.getInt("PortStopBits");
                     terminalType = TerminalType.valueOf(settingsJson.getString("Type"));
+                    binaryModeBytesPerLine = settingsJson.getInt("binaryModeBytesPerLine");
                 }
             } catch (IOException | JSONException ex) {
                 System.out.println(ex.getMessage());
@@ -214,6 +220,18 @@ public final class TerminalSettings {
         return value.name();
     }
 
+    public void setBinaryBytesPerLine(int value) {
+        if (value >= BINARY_BYTES_PER_LINE_MIN && value <= BINARY_BYTES_PER_LINE_MAX) {
+            binaryModeBytesPerLine = value;
+        } else {
+            binaryModeBytesPerLine = BINARY_BYTES_PER_LINE_DEFAULT;
+        }
+    }
+
+    public int getBinaryBytesPerLine() {
+        return binaryModeBytesPerLine;
+    }
+
     public boolean save() {
         return saveAs(currentSettingsFileLocation);
     }
@@ -232,6 +250,7 @@ public final class TerminalSettings {
             settingsJson.put("PortParity", portParity);
             settingsJson.put("PortStopBits", portStopBits);
             settingsJson.put("Type", getTypeUserName(terminalType));
+            settingsJson.put("binaryModeBytesPerLine", binaryModeBytesPerLine);
             settingsJson.toString();
 
             try {

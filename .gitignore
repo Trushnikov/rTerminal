@@ -7,3 +7,4 @@ terminal.tsetting
 terminal/app/win/rTerminal
 terminal/app/linux/rTerminal
 terminal/app/macos/rTerminal
+/rTerminal/target/

@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -19,11 +20,11 @@ import javafx.stage.Stage;
 import javax.swing.ImageIcon;
 
 public class TerminalSettingsWindow extends Application {
-    
+
     private TerminalSettings terminalSettings;
     private MainWindow parentWindow;
-    
-    public TerminalSettingsWindow(TerminalSettings settings, MainWindow window){
+
+    public TerminalSettingsWindow(TerminalSettings settings, MainWindow window) {
         terminalSettings = settings;
         parentWindow = window;
     }
@@ -70,19 +71,32 @@ public class TerminalSettingsWindow extends Application {
             chboxTerminator.getItems().add(terminator.name());
         }
         chboxTerminator.setValue(TerminalSettings.getLineTerminatorUserName(terminalSettings.getLineTerminator()));
-                
+
+        Label lblBytesPerLine = new Label("Bytes per lin in binary mode");
+        commonSettingsPanelInternalPane.add(lblBytesPerLine, 0, 2);
+
+        TextField txtBytesPerLine = new TextField(Integer.toString(terminalSettings.getBinaryBytesPerLine()));
+        txtBytesPerLine.setMinWidth(100);
+        commonSettingsPanelInternalPane.add(txtBytesPerLine, 1, 2);
+
         CheckBox chkDisplayTimeStamp = new CheckBox("Display timestamp");
         chkDisplayTimeStamp.setSelected(terminalSettings.getDisplayTimestamp());
-        commonSettingsPanelInternalPane.add(chkDisplayTimeStamp, 0, 2);
+        commonSettingsPanelInternalPane.add(chkDisplayTimeStamp, 0, 3);
         commonSettingsPanel.setContent(commonSettingsPanelInternalPane);
 
         /* buttons area */
         Button btnApply = new Button("Apply");
         btnApply.setMinWidth(75);
         btnApply.setOnMouseClicked(event -> {
+            int bytesPerLine = Integer.parseInt(txtBytesPerLine.getText());
+            if (bytesPerLine < TerminalSettings.BINARY_BYTES_PER_LINE_MIN || bytesPerLine > TerminalSettings.BINARY_BYTES_PER_LINE_MAX) {
+                return;
+            }
+
             terminalSettings.setType(TerminalSettings.TerminalType.valueOf(chboxTerminalType.getValue()));
             terminalSettings.setLineTerminator(TerminalSettings.LineTerminator.valueOf(chboxTerminator.getValue()));
             terminalSettings.setDisplayTimestamp(chkDisplayTimeStamp.isSelected());
+            terminalSettings.setBinaryBytesPerLine(bytesPerLine);
             terminalSettings.isChanged = true;
             parentWindow.refreshTitle();
             stage.close();

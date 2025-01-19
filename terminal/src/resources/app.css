@@ -80,3 +80,9 @@ Alert{
     -fx-font-family: "Verdana";
 }
 
+.text-area {
+    -fx-font-family: "Monospace";
+    -fx-font-weight: bold;
+    -fx-font-size: 9pt;
+}
+

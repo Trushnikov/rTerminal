@@ -20,7 +20,7 @@ import javax.swing.ImageIcon;
 
 public class MacroEditorWindow extends Application {
 
-    private MainWindow parentWindow;
+    private final MainWindow parentWindow;
     private Macro currentMacro = new Macro();
     private int selectedMacroIdx = 0;
     private AppSettings currentAppSettings;

@@ -3,7 +3,7 @@ package com.renesanco.terminal;
 import java.awt.Taskbar;
 import java.util.Arrays;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
+//import javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,6 +35,7 @@ public class CommSettingsWindow extends Application {
     private ChoiceBox<String> chboxPortStopbits = new ChoiceBox();
 
     private MainWindow parentWindow;
+    private Stage thisStage;
 
     public CommSettingsWindow(TerminalSettings settings, MainWindow window) {
         terminalSettings = settings;
@@ -43,6 +44,8 @@ public class CommSettingsWindow extends Application {
 
     @Override
     public void start(Stage stage) {
+        thisStage = stage;
+
         /* app icon */
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
@@ -148,20 +151,13 @@ public class CommSettingsWindow extends Application {
         Button btnApply = new Button("Apply");
         btnApply.setMinWidth(75);
         btnApply.setOnMouseClicked(event -> {
-            terminalSettings.setPortBaud(chboxPortBaud.getValue());
-            terminalSettings.setPortDatabits(chboxPortDatabits.getValue());
-            terminalSettings.setPortName(chboxPortName.getValue());
-            terminalSettings.setPortParity(TerminalSettings.getPortParityByUserString(chboxPortParity.getValue()));
-            terminalSettings.setPortStopBits(TerminalSettings.getPortStopBitsByUserName(chboxPortStopbits.getValue()));
-            parentWindow.refreshTitle();
-            parentWindow.refreshPortSettingsLabel();
-            stage.close();
+            btnApplyClickHandler();
         });
 
         Button btnCancel = new Button("Cancel");
         btnCancel.setMinWidth(75);
         btnCancel.setOnMouseClicked(event -> {
-            stage.close();
+            btnCancelClickHandler();
         });
 
         FlowPane paneButtons = new FlowPane();
@@ -182,6 +178,21 @@ public class CommSettingsWindow extends Application {
         stage.setTitle("Communication Settings");
         stage.setAlwaysOnTop(true);
         stage.show();
+    }
+
+    private void btnApplyClickHandler() {
+        terminalSettings.setPortBaud(chboxPortBaud.getValue());
+        terminalSettings.setPortDatabits(chboxPortDatabits.getValue());
+        terminalSettings.setPortName(chboxPortName.getValue());
+        terminalSettings.setPortParity(TerminalSettings.getPortParityByUserString(chboxPortParity.getValue()));
+        terminalSettings.setPortStopBits(TerminalSettings.getPortStopBitsByUserName(chboxPortStopbits.getValue()));
+        parentWindow.refreshTitle();
+        parentWindow.refreshPortSettingsLabel();
+        thisStage.close();
+    }
+
+    private void btnCancelClickHandler() {
+        thisStage.close();
     }
 
     public static void main(String[] args) {

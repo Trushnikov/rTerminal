@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.renesanco</groupId>
     <artifactId>terminal</artifactId>
-    <version>0.0.1</version>
+    <version>x</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -101,4 +101,5 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
+    <name>terminal</name>
 </project>
