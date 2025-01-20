@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -175,6 +176,8 @@ public class CommSettingsWindow extends Application {
         var scene = new Scene(verticalPane);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
+        stage.setMinWidth(340);
+        stage.setMinHeight(275);
         stage.setTitle("Communication Settings");
         stage.setAlwaysOnTop(true);
         stage.show();
@@ -188,6 +191,7 @@ public class CommSettingsWindow extends Application {
         terminalSettings.setPortStopBits(TerminalSettings.getPortStopBitsByUserName(chboxPortStopbits.getValue()));
         parentWindow.refreshTitle();
         parentWindow.refreshPortSettingsLabel();
+            
         thisStage.close();
     }
 

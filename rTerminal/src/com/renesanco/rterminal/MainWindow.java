@@ -93,6 +93,8 @@ public class MainWindow extends Application {
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
         stage.setIconified(false);
+        stage.setMinWidth(900);
+        stage.setMinHeight(700);
         stage.setOnCloseRequest((WindowEvent event) -> {
             appClose();
         });
@@ -105,7 +107,7 @@ public class MainWindow extends Application {
         if (terminalSettings.isChanged) {
             title += "*";
         }
-        thisStage.setTitle(appSettings.APP_TITLE + " : " + title);
+        thisStage.setTitle(AppSettings.APP_TITLE + " : " + title);
     }
 
     private MenuBar createMenu() {

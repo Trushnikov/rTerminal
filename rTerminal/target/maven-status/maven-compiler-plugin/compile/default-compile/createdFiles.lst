@@ -1,6 +1,6 @@
-com/renesanco/rterminal/Terminal.class
-com/renesanco/rterminal/MainWindow.class
 com/renesanco/rterminal/SplashWindow$MyTimerTask.class
+com/renesanco/rterminal/MainWindow.class
+com/renesanco/rterminal/Terminal.class
 com/renesanco/rterminal/AppSettings.class
 com/renesanco/rterminal/Terminal$PortReader.class
 com/renesanco/rterminal/SplashWindow.class
@@ -8,8 +8,8 @@ com/renesanco/rterminal/TerminalSettings$LineTerminator.class
 com/renesanco/rterminal/TerminalSettings.class
 module-info.class
 com/renesanco/rterminal/MacroEditorWindow.class
-com/renesanco/rterminal/CommSettingsWindow.class
 com/renesanco/rterminal/Macro.class
+com/renesanco/rterminal/CommSettingsWindow.class
 com/renesanco/rterminal/Terminal$1.class
 com/renesanco/rterminal/TerminalSettingsWindow.class
 com/renesanco/rterminal/Starter.class

@@ -109,6 +109,7 @@ public class MacroEditorWindow extends Application {
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setResizable(false);
         stage.setScene(scene);
+        stage.setIconified(false);
         stage.setAlwaysOnTop(true);
         stage.show();
     }

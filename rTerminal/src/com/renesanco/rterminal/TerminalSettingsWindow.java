@@ -6,6 +6,7 @@ import static javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -21,8 +22,8 @@ import javax.swing.ImageIcon;
 
 public class TerminalSettingsWindow extends Application {
 
-    private TerminalSettings terminalSettings;
-    private MainWindow parentWindow;
+    private final TerminalSettings terminalSettings;
+    private final MainWindow parentWindow;
 
     public TerminalSettingsWindow(TerminalSettings settings, MainWindow window) {
         terminalSettings = settings;
@@ -99,6 +100,7 @@ public class TerminalSettingsWindow extends Application {
             terminalSettings.setBinaryBytesPerLine(bytesPerLine);
             terminalSettings.isChanged = true;
             parentWindow.refreshTitle();
+            
             stage.close();
         });
 
@@ -123,6 +125,8 @@ public class TerminalSettingsWindow extends Application {
         var scene = new Scene(verticalPane);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
+        stage.setMinWidth(350);
+        stage.setMinHeight(250);
         stage.setAlwaysOnTop(true);
         stage.setTitle("Terminal Settings");
         stage.show();
