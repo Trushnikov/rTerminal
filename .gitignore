@@ -4,7 +4,7 @@ terminal4.tsetting
 terminal3.tsetting
 terminal2.tsetting
 terminal.tsetting
-terminal/app/win/rTerminal
-terminal/app/linux/rTerminal
-terminal/app/macos/rTerminal
+rTerminal/app/win/rTerminal
+rTerminal/app/linux/rTerminal
+rTerminal/app/macos/rTerminal
 /rTerminal/target/
