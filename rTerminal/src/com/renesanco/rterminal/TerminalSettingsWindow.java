@@ -87,7 +87,7 @@ public class TerminalSettingsWindow extends Application {
         }
         chboxTerminator.setValue(TerminalSettings.getLineTerminatorUserName(terminalSettings.getLineTerminator()));
 
-        Label lblBytesPerLine = new Label("Bytes per lin in binary mode");
+        Label lblBytesPerLine = new Label("Bytes per line in binary mode");
         commonSettingsPanelInternalPane.add(lblBytesPerLine, 0, 2);
 
         TextField txtBytesPerLine = new TextField(Integer.toString(terminalSettings.getBinaryBytesPerLine()));
