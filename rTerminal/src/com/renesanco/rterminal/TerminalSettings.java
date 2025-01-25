@@ -41,6 +41,7 @@ public final class TerminalSettings {
     private Integer portStopBits = SerialPort.STOPBITS_1;
     private TerminalType terminalType = TerminalType.String;
     private Boolean displayTimestamp = false;
+    private Boolean displayMsgDirection = true;
     private LineTerminator lineTerminator = LineTerminator.None;
     private int binaryModeBytesPerLine = BINARY_BYTES_PER_LINE_DEFAULT;
 
@@ -63,6 +64,7 @@ public final class TerminalSettings {
                     String settingsJsonString = sb.toString();
                     JSONObject settingsJson = new JSONObject(settingsJsonString);
                     displayTimestamp = settingsJson.getBoolean("DisplayTimestamp");
+                    displayMsgDirection = settingsJson.getBoolean("DisplayMsgDirection");
                     lineTerminator = TerminalSettings.LineTerminator.valueOf(settingsJson.getString("LineTerminator"));
                     portBaud = settingsJson.getInt("PortBaud");
                     portDatabits = settingsJson.getInt("PortDatabits");
@@ -206,6 +208,15 @@ public final class TerminalSettings {
     public Boolean getDisplayTimestamp() {
         return displayTimestamp;
     }
+    
+    public void setDisplayMsgDirection(boolean value) {
+        displayMsgDirection = value;
+        isChanged = true;
+    }
+
+    public Boolean getDisplayMsgDirection() {
+        return displayMsgDirection;
+    }    
 
     public void setLineTerminator(LineTerminator value) {
         lineTerminator = value;
@@ -243,6 +254,7 @@ public final class TerminalSettings {
             Path settingsFileLocationPath = Paths.get(settingsFileLocation);
             JSONObject settingsJson = new JSONObject();
             settingsJson.put("DisplayTimestamp", displayTimestamp);
+            settingsJson.put("DisplayMsgDirection", displayMsgDirection);
             settingsJson.put("LineTerminator", getLineTerminatorUserName(lineTerminator));
             settingsJson.put("PortBaud", portBaud);
             settingsJson.put("PortDatabits", portDatabits);

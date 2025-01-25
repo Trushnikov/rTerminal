@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Optional;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,7 +47,7 @@ import javax.swing.ImageIcon;
 import jssc.SerialPortException;
 
 public class MainWindow extends Application {
-    
+
     Label lblPortSettings = new Label("Disconnected");
     TextField txtTextToSend = new TextField();
     MenuItem mnuItemFirstLastOpenedFile, mnuItemSecondLastOpenedFile, mnuItemThirdLastOpenedFile;
@@ -61,7 +62,7 @@ public class MainWindow extends Application {
     Button btnSend = new Button("Send");
     Button[] macroButtons = new Button[20];
     private VBox macroPanel;
-    
+
     @Override
     public void start(Stage stage) {
         thisStage = stage;
@@ -75,20 +76,20 @@ public class MainWindow extends Application {
             taskbar.setIconImage(new ImageIcon(getClass().getResource("/mac_icon.png")).getImage());
         } catch (Exception ex) {
         }
-        
+
         appSettings = new AppSettings();
         terminalSettings = new TerminalSettings(appSettings.getLastTerminalSettingsFileLocation());
         terminal = new Terminal(terminalSettings);
         refreshTitle();
         refreshPortSettingsLabel();
-        
+
         BorderPane mainPane = new BorderPane();
         mainPane.setTop(createMenu());
         mainPane.setCenter(createInteractivePanel());
         macroPanel = createShortcutsPanel();
         mainPane.setRight(macroPanel);
         mainPane.setBottom(createStatusPanel());
-        
+
         var scene = new Scene(mainPane, 900, 700);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
@@ -100,7 +101,7 @@ public class MainWindow extends Application {
         });
         stage.show();
     }
-    
+
     public void refreshTitle() {
         String title = appSettings.getLastTerminalSettingsFileLocation();
         title = title.substring(title.lastIndexOf("/") + 1);
@@ -109,56 +110,56 @@ public class MainWindow extends Application {
         }
         thisStage.setTitle(AppSettings.APP_TITLE + " : " + title);
     }
-    
+
     private MenuBar createMenu() {
         /* menu creation */
         Menu mnuFile = new Menu("File");
-        
+
         MenuItem mnuItemOpen = new MenuItem("Open Terminal Settings File");
         mnuItemOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         mnuItemOpen.setOnAction(event -> {
             menuItemOpenHandler();
         });
         mnuFile.getItems().add(mnuItemOpen);
-        
+
         MenuItem mnuItemSave = new MenuItem("Save Terminal Settings File");
         mnuItemSave.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         mnuItemSave.setOnAction(event -> {
             mnuItemSaveHandler();
         });
         mnuFile.getItems().add(mnuItemSave);
-        
+
         MenuItem mnuItemSaveAs = new MenuItem("Save File As");
         mnuItemSaveAs.setOnAction(event -> {
             mnuItemSaveAsHandler();
         });
         mnuFile.getItems().add(mnuItemSaveAs);
-        
+
         mnuFile.getItems().add(new SeparatorMenuItem());
-        
+
         mnuItemFirstLastOpenedFile = new MenuItem();
         mnuItemFirstLastOpenedFile.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.CONTROL_DOWN));
         mnuItemFirstLastOpenedFile.setOnAction(event -> {
             mnuItemLastOpenedFileHandler(0);
         });
         mnuFile.getItems().add(mnuItemFirstLastOpenedFile);
-        
+
         mnuItemSecondLastOpenedFile = new MenuItem();
         mnuItemSecondLastOpenedFile.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.CONTROL_DOWN));
         mnuItemSecondLastOpenedFile.setOnAction(event -> {
             mnuItemLastOpenedFileHandler(1);
         });
         mnuFile.getItems().add(mnuItemSecondLastOpenedFile);
-        
+
         mnuItemThirdLastOpenedFile = new MenuItem();
         mnuItemThirdLastOpenedFile.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.CONTROL_DOWN));
         mnuItemThirdLastOpenedFile.setOnAction(event -> {
             mnuItemLastOpenedFileHandler(2);
         });
         mnuFile.getItems().add(mnuItemThirdLastOpenedFile);
-        
+
         redrawRecentFilesMenu();
-        
+
         mnuFile.getItems().add(new SeparatorMenuItem());
         MenuItem mnuItemExit = new MenuItem("Exit");
         mnuItemExit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.META_DOWN));
@@ -167,7 +168,7 @@ public class MainWindow extends Application {
             thisStage.close();
         });
         mnuFile.getItems().add(mnuItemExit);
-        
+
         Menu mnuSettings = new Menu("Settings");
         MenuItem mnuItemCommSettings = new MenuItem("Communication settings");
         mnuSettings.getItems().add(mnuItemCommSettings);
@@ -175,14 +176,14 @@ public class MainWindow extends Application {
             CommSettingsWindow wnd = new CommSettingsWindow(terminalSettings, this);
             wnd.start(new Stage());
         });
-        
+
         MenuItem mnuItemTerminalSettings = new MenuItem("Terminal settings");
         mnuSettings.getItems().add(mnuItemTerminalSettings);
         mnuItemTerminalSettings.setOnAction(event -> {
             TerminalSettingsWindow wnd = new TerminalSettingsWindow(terminalSettings, this);
             wnd.start(new Stage());
         });
-        
+
         Menu mnuHelp = new Menu("Help");
         MenuItem mnuItemAbout = new MenuItem("About");
         mnuItemAbout.setOnAction(event -> {
@@ -193,16 +194,16 @@ public class MainWindow extends Application {
             alert.show();
         });
         mnuHelp.getItems().add(mnuItemAbout);
-        
+
         return new MenuBar(mnuFile, mnuSettings, mnuHelp);
     }
-    
+
     private void redrawRecentFilesMenu() {
         mnuItemFirstLastOpenedFile.setText("1." + appSettings.getRecentTerminalSettingsFileLocation0());
         mnuItemSecondLastOpenedFile.setText("2." + appSettings.getRecentTerminalSettingsFileLocation1());
         mnuItemThirdLastOpenedFile.setText("3." + appSettings.getRecentTerminalSettingsFileLocation2());
     }
-    
+
     public void refreshPortSettingsLabel() {
         String status = String.format("%s %d,%d,%s,%s",
                 terminalSettings.getPortName(),
@@ -212,13 +213,13 @@ public class MainWindow extends Application {
                 TerminalSettings.getPortStopBitsUserName(terminalSettings.getPortStopBits()));
         lblPortSettings.setText(status);
     }
-    
+
     private SplitPane createInteractivePanel() {
         SplitPane interactivePanel = new SplitPane();
         interactivePanel.setBorder(Border.EMPTY);
         interactivePanel.setPadding(new Insets(3));
         interactivePanel.setOrientation(Orientation.VERTICAL);
-        
+
         tableSentCommands.setRowFactory(tv -> {
             TableRow<String> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -266,7 +267,7 @@ public class MainWindow extends Application {
                 btnSendClickHandler();
             }
         });
-        
+
         btnSend.setMinWidth(100);
         BorderPane.setMargin(btnSend, new Insets(3, 0, 3, 3));
         sendPanel.setRight(btnSend);
@@ -296,11 +297,11 @@ public class MainWindow extends Application {
         txtDataPanel.setCenter(txtData);
         loPanel.setCenter(txtDataPanel);
         interactivePanel.getItems().add(loPanel);
-        
+
         interactivePanel.setDividerPosition(0, 0.3);
         return interactivePanel;
     }
-    
+
     private VBox createShortcutsPanel() {
         VBox pane = new VBox();
         pane.setMinWidth(200);
@@ -333,14 +334,14 @@ public class MainWindow extends Application {
         }
         return pane;
     }
-    
+
     private void macroLabelClickHandler(String lblId) {
         int idx = Integer.parseInt(lblId.substring(1));
         MacroEditorWindow wnd = new MacroEditorWindow(this);
         wnd.start(new Stage());
         wnd.setMacroData(idx, appSettings);
     }
-    
+
     private void macroButtonClickHandler(String btnId) {
         int idx = Integer.parseInt(btnId.substring(1));
         try {
@@ -349,7 +350,7 @@ public class MainWindow extends Application {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     public void refreshMacroLabels() {
         for (Node node : macroPanel.getChildren()) {
             FlowPane fp = (FlowPane) node;
@@ -368,17 +369,17 @@ public class MainWindow extends Application {
             }
         }
     }
-    
+
     private FlowPane createStatusPanel() {
         FlowPane pane = new FlowPane(btnConnect, lblPortSettings);
         pane.setPadding(new Insets(5, 5, 5, 10));
         pane.setHgap(10);
-        
+
         btnConnect.setMinWidth(100);
         btnConnect.setOnMouseClicked((MouseEvent event) -> {
             btnConnectClickHandler();
         });
-        
+
         lblPortSettings.setStyle("-fx-text-fill: darkgrey");
         lblPortSettings.setOnMouseClicked((MouseEvent event) -> {
             if (event.getClickCount() == 2) {
@@ -390,15 +391,15 @@ public class MainWindow extends Application {
         });
         return pane;
     }
-    
+
     private void menuItemOpenHandler() {
         checkForModifiedSettingsAction();
-        
+
         FileChooser openFileDialog = new FileChooser();
         openFileDialog.setTitle("Open terminal settings from file");
         openFileDialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("tsettings files", "*.tsetting"));
         File selectedFile = openFileDialog.showOpenDialog(new Stage());
-        
+
         if (selectedFile != null) {
             String selectedFileLocation = selectedFile.toString();
             terminalSettings = new TerminalSettings(selectedFileLocation);
@@ -408,20 +409,20 @@ public class MainWindow extends Application {
             refreshPortSettingsLabel();
         }
     }
-    
+
     private void mnuItemSaveHandler() {
         if (terminalSettings != null) {
             terminalSettings.save();
             refreshTitle();
         }
     }
-    
+
     private void mnuItemSaveAsHandler() {
         FileChooser saveFileDialog = new FileChooser();
         saveFileDialog.setTitle("Save terminal settings as..");
         saveFileDialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("tsettings files", "*.tsetting"));
         File selectedFile = saveFileDialog.showSaveDialog(new Stage());
-        
+
         if (selectedFile != null) {
             String newFilePath = selectedFile.toString();
             terminalSettings.saveAs(newFilePath);
@@ -430,10 +431,10 @@ public class MainWindow extends Application {
             refreshTitle();
         }
     }
-    
+
     private void mnuItemLastOpenedFileHandler(int index) {
         String selectedFileLocation;
-        
+
         switch (index) {
             case 0:
                 selectedFileLocation = appSettings.getRecentTerminalSettingsFileLocation0();
@@ -447,7 +448,7 @@ public class MainWindow extends Application {
             default:
                 selectedFileLocation = AppSettings.EMPTY_LOCATION;
         }
-        
+
         if (selectedFileLocation == null ? AppSettings.EMPTY_LOCATION != null : !selectedFileLocation.equals(AppSettings.EMPTY_LOCATION)) {
             terminalSettings = new TerminalSettings(selectedFileLocation);
             appSettings.setLastTerminalSettingsFileLocation(selectedFileLocation);
@@ -455,7 +456,7 @@ public class MainWindow extends Application {
             refreshTitle();
         }
     }
-    
+
     private void appClose() {
         checkForModifiedSettingsAction();
         try {
@@ -464,7 +465,7 @@ public class MainWindow extends Application {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     private void btnConnectClickHandler() {
         if (btnConnect.getText().equals(AppSettings.CONNECT)) {
             try {
@@ -473,7 +474,10 @@ public class MainWindow extends Application {
                     btnConnect.setText(AppSettings.DISCONNECT);
                     terminal.addPropertyChangeListener((evt) -> {
                         byte[] receivedBuffer = terminal.getReceivedBuffer();
-                        addRxMessageToLog(receivedBuffer);
+//                        addRxMessageToLog(receivedBuffer);
+                        Platform.runLater(() -> {
+                            addRxMessageToLog(receivedBuffer);
+                        });
                     });
                 }
             } catch (SerialPortException ex) {
@@ -491,13 +495,13 @@ public class MainWindow extends Application {
             }
         }
     }
-    
+
     private void btnSendClickHandler() {
         if (terminal.isConnected()) {
             sendMessageAndSaveToLog(txtTextToSend.getText());
         }
     }
-    
+
     private void sendMessageAndSaveToLog(String msg) {
         try {
             terminal.send(msg);
@@ -513,14 +517,14 @@ public class MainWindow extends Application {
             alert.show();
         }
     }
-    
+
     private void checkForModifiedSettingsAction() {
         if (terminalSettings.isChanged) {
             /* current tags table is modified - possible need to save */
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
             alert.setTitle("Confirm current terminal settings changes");
             alert.setContentText("Current terminal settings have changed. Save it?");
-            
+
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.YES) {
                 terminalSettings.save();
@@ -528,14 +532,16 @@ public class MainWindow extends Application {
             }
         }
     }
-    
+
     private void addTxMessageToLog(String msg) {
         String line = "";
         if (terminalSettings.getDisplayTimestamp()) {
             String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
             line += timeStamp + " ";
         }
-        line += "> \n";
+        if (terminalSettings.getDisplayMsgDirection()) {
+            line += "> \n";
+        }
         if (terminalSettings.getType() == TerminalSettings.TerminalType.String) {
             line += msg;
         } else {
@@ -547,36 +553,49 @@ public class MainWindow extends Application {
         line += "\n";
         txtData.appendText(line);
     }
-    
+
     private void addRxMessageToLog(byte[] msg) {
         String line = "";
-        if (terminalSettings.getDisplayTimestamp()) {
-            String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
-            line += timeStamp + " ";
-        }
-        line += "< \n";
-        if (terminalSettings.getType() == TerminalSettings.TerminalType.String) {
-            for (byte b : msg) {
-                line += (char) b;
+
+        try {
+            if (msg.length == 0) {
+                return;
             }
-        } else {
-            int bytesPerLineCounter = 0;
-            int bytesPerLine = terminalSettings.getBinaryBytesPerLine();
-            for (byte b : msg) {
-                line += String.format("%02X ", b);
-                bytesPerLineCounter++;
-                if (bytesPerLineCounter == bytesPerLine) {
-                    line += "\n";
-                    bytesPerLineCounter = 0;
+
+            if (terminalSettings.getDisplayTimestamp()) {
+                String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+                line += timeStamp + " ";
+            }
+            if (terminalSettings.getDisplayMsgDirection()) {
+                line += "< \n";
+            }
+            if (terminalSettings.getType() == TerminalSettings.TerminalType.String) {
+                for (byte b : msg) {
+                    line += (char) b;
+                }
+            } else {
+                int bytesPerLineCounter = 0;
+                int bytesPerLine = terminalSettings.getBinaryBytesPerLine();
+                for (byte b : msg) {
+                    line += String.format("%02X ", b);
+                    bytesPerLineCounter++;
+                    if (bytesPerLineCounter == bytesPerLine) {
+                        line += "\n";
+                        bytesPerLineCounter = 0;
+                    }
                 }
             }
+            if (!terminalSettings.getDisplayMsgDirection() && !terminalSettings.getDisplayTimestamp()) {
+                if (!line.substring(line.length() - 1).equals("\n")) {
+                    line += "\n";
+                }
+            }
+            txtData.appendText(line);
+        } catch (Exception ex) {
+            System.out.println("com.renesanco.rterminal.MainWindow.addRxMessageToLog() error:" + ex.getMessage());
         }
-        if (!line.substring(line.length() - 1).equals("\n")) {
-            line += "\n";
-        }
-        txtData.appendText(line);
     }
-    
+
     public static void main(String[] args) {
         launch();
     }

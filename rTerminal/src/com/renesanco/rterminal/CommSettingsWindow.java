@@ -3,6 +3,7 @@ package com.renesanco.rterminal;
 import java.awt.Taskbar;
 import java.util.Arrays;
 import javafx.application.Application;
+import javafx.geometry.HPos;
 //import javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -59,14 +61,26 @@ public class CommSettingsWindow extends Application {
 
         /* serial port settings area */
         TitledPane paneSerialPortSettings = new TitledPane();
+        paneSerialPortSettings.setCollapsible(false);
         paneSerialPortSettings.setPadding(new Insets(3));
+        paneSerialPortSettings.setMinWidth(322);
         paneSerialPortSettings.setText("Serial Port Settings");
 
         GridPane paneSerialPortSettingsInternalPane = new GridPane();
+        paneSerialPortSettingsInternalPane.setMinWidth(316);
         paneSerialPortSettingsInternalPane.setHgap(10);
         paneSerialPortSettingsInternalPane.setVgap(5);
+        
+        ColumnConstraints col0 = new ColumnConstraints();
+        col0.setHalignment(HPos.LEFT);
+        paneSerialPortSettingsInternalPane.getColumnConstraints().add(col0);
+        
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setHalignment(HPos.RIGHT);
+        paneSerialPortSettingsInternalPane.getColumnConstraints().add(col1);        
 
         Label lblPortName = new Label("Port");
+        lblPortName.setMinWidth(80);
         paneSerialPortSettingsInternalPane.add(lblPortName, 0, 0);
 
         chboxPortName.setMinWidth(200);
@@ -170,13 +184,14 @@ public class CommSettingsWindow extends Application {
 
         /* common composer */
         BorderPane verticalPane = new BorderPane();
+        BorderPane.setAlignment(paneSerialPortSettings, Pos.TOP_CENTER);
         verticalPane.setCenter(paneSerialPortSettings);
         verticalPane.setBottom(paneButtons);
 
         var scene = new Scene(verticalPane);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
-        stage.setMinWidth(340);
+        stage.setMinWidth(328);
         stage.setMinHeight(275);
         stage.setTitle("Communication Settings");
         stage.setAlwaysOnTop(true);

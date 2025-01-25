@@ -3,6 +3,7 @@ package com.renesanco.rterminal;
 import java.awt.Taskbar;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -44,14 +46,26 @@ public class TerminalSettingsWindow extends Application {
 
         /* Common settings pane */
         TitledPane commonSettingsPanel = new TitledPane();
+        commonSettingsPanel.setCollapsible(false);
         commonSettingsPanel.setPadding(new Insets(3));
+        commonSettingsPanel.setMinWidth(326);
         commonSettingsPanel.setText("Common Settings");
 
         GridPane commonSettingsPanelInternalPane = new GridPane();
+        commonSettingsPanelInternalPane.setMinWidth(320);
         commonSettingsPanelInternalPane.setHgap(10);
         commonSettingsPanelInternalPane.setVgap(5);
+        
+        ColumnConstraints col0 = new ColumnConstraints();
+        col0.setHalignment(HPos.LEFT);
+        commonSettingsPanelInternalPane.getColumnConstraints().add(col0);
+        
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setHalignment(HPos.RIGHT);
+        commonSettingsPanelInternalPane.getColumnConstraints().add(col1);        
 
         Label lblTerminalType = new Label("Terminal type");
+        lblTerminalType.setMinWidth(200);
         commonSettingsPanelInternalPane.add(lblTerminalType, 0, 0);
 
         ChoiceBox<String> chboxTerminalType = new ChoiceBox();
@@ -83,8 +97,12 @@ public class TerminalSettingsWindow extends Application {
         CheckBox chkDisplayTimeStamp = new CheckBox("Display timestamp");
         chkDisplayTimeStamp.setSelected(terminalSettings.getDisplayTimestamp());
         commonSettingsPanelInternalPane.add(chkDisplayTimeStamp, 0, 3);
-        commonSettingsPanel.setContent(commonSettingsPanelInternalPane);
 
+        CheckBox chkDisplayMsgDirection = new CheckBox("Display message direction");
+        chkDisplayMsgDirection.setSelected(terminalSettings.getDisplayMsgDirection());
+        commonSettingsPanelInternalPane.add(chkDisplayMsgDirection, 0, 4);
+        commonSettingsPanel.setContent(commonSettingsPanelInternalPane);
+        
         /* buttons area */
         Button btnApply = new Button("Apply");
         btnApply.setMinWidth(75);
@@ -97,6 +115,7 @@ public class TerminalSettingsWindow extends Application {
             terminalSettings.setType(TerminalSettings.TerminalType.valueOf(chboxTerminalType.getValue()));
             terminalSettings.setLineTerminator(TerminalSettings.LineTerminator.valueOf(chboxTerminator.getValue()));
             terminalSettings.setDisplayTimestamp(chkDisplayTimeStamp.isSelected());
+            terminalSettings.setDisplayMsgDirection(chkDisplayMsgDirection.isSelected());
             terminalSettings.setBinaryBytesPerLine(bytesPerLine);
             terminalSettings.isChanged = true;
             parentWindow.refreshTitle();
@@ -119,14 +138,15 @@ public class TerminalSettingsWindow extends Application {
 
         /* common composer */
         BorderPane verticalPane = new BorderPane();
+        BorderPane.setAlignment(commonSettingsPanel, Pos.TOP_CENTER);
         verticalPane.setCenter(commonSettingsPanel);
         verticalPane.setBottom(paneButtons);
 
         var scene = new Scene(verticalPane);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
-        stage.setMinWidth(350);
-        stage.setMinHeight(250);
+        stage.setMinWidth(332);
+        stage.setMinHeight(260);
         stage.setAlwaysOnTop(true);
         stage.setTitle("Terminal Settings");
         stage.show();

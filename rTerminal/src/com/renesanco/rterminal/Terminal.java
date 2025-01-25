@@ -3,8 +3,7 @@ package com.renesanco.rterminal;
 import static com.renesanco.rterminal.TerminalSettings.LineTerminator.Lf;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
@@ -15,7 +14,9 @@ public class Terminal {
     private final TerminalSettings terminalSettings;
     private SerialPort sp;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-    private byte[] receivedBuffer;
+    private byte[] receivedBuffer0;
+    private byte[] receivedBuffer1;
+    private boolean isZeroBufferUsed = true;
 
     public Terminal(TerminalSettings settings) {
         terminalSettings = settings;
@@ -35,7 +36,13 @@ public class Terminal {
         public void serialEvent(SerialPortEvent event) {
             if (event.isRXCHAR() && event.getEventValue() > 0) {
                 try {
-                    receivedBuffer = sp.readBytes();
+                    if (isZeroBufferUsed) {
+                        receivedBuffer0 = sp.readBytes();
+                        isZeroBufferUsed = false;
+                    } else {
+                        receivedBuffer1 = sp.readBytes();
+                        isZeroBufferUsed = true;
+                    }
                 } catch (SerialPortException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -45,7 +52,7 @@ public class Terminal {
     }
 
     public byte[] getReceivedBuffer() {
-        return receivedBuffer;
+        return (isZeroBufferUsed) ? receivedBuffer0 : receivedBuffer1;
     }
 
     public void connect() throws SerialPortException {
