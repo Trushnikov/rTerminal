@@ -8,3 +8,4 @@ rTerminal/app/win/rTerminal
 rTerminal/app/linux/rTerminal
 rTerminal/app/macos/rTerminal
 
+/rterminal/target/
