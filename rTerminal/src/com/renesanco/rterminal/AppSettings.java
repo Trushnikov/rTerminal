@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class AppSettings {
 
     public static final String APP_TITLE = "Terminal";
-    public static final String APP_VERSION = "v.1.0.2";
+    public static final String APP_VERSION = "v.1.0.3";
     public static final String EMPTY_LOCATION = "empty";
     public static final String EMPTY_MACRO = "<empty>";
     public static final String CONNECT = "Connect";

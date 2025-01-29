@@ -1,6 +1,7 @@
 package com.renesanco.rterminal;
 
 import java.awt.Taskbar;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,6 +63,7 @@ public class MainWindow extends Application {
     Button btnSend = new Button("Send");
     Button[] macroButtons = new Button[20];
     private VBox macroPanel;
+    private PropertyChangeListener listener;
 
     @Override
     public void start(Stage stage) {
@@ -80,6 +82,12 @@ public class MainWindow extends Application {
         appSettings = new AppSettings();
         terminalSettings = new TerminalSettings(appSettings.getLastTerminalSettingsFileLocation());
         terminal = new Terminal(terminalSettings);
+        terminal.addPropertyChangeListener((evt) -> {
+            byte[] receivedBuffer = terminal.getReceivedBuffer();
+            Platform.runLater(() -> {
+                addRxMessageToLog(receivedBuffer);
+            });
+        });
         refreshTitle();
         refreshPortSettingsLabel();
 
@@ -472,13 +480,6 @@ public class MainWindow extends Application {
                 terminal.connect();
                 if (terminal.isConnected()) {
                     btnConnect.setText(AppSettings.DISCONNECT);
-                    terminal.addPropertyChangeListener((evt) -> {
-                        byte[] receivedBuffer = terminal.getReceivedBuffer();
-//                        addRxMessageToLog(receivedBuffer);
-                        Platform.runLater(() -> {
-                            addRxMessageToLog(receivedBuffer);
-                        });
-                    });
                 }
             } catch (SerialPortException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
