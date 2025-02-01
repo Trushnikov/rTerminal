@@ -63,7 +63,6 @@ public class MainWindow extends Application {
     Button btnSend = new Button("Send");
     Button[] macroButtons = new Button[20];
     private VBox macroPanel;
-    private PropertyChangeListener listener;
 
     @Override
     public void start(Stage stage) {
