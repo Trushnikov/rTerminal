@@ -4,11 +4,9 @@ import java.awt.Taskbar;
 import java.util.Arrays;
 import javafx.application.Application;
 import javafx.geometry.HPos;
-//import javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -70,14 +68,14 @@ public class CommSettingsWindow extends Application {
         paneSerialPortSettingsInternalPane.setMinWidth(316);
         paneSerialPortSettingsInternalPane.setHgap(10);
         paneSerialPortSettingsInternalPane.setVgap(5);
-        
+
         ColumnConstraints col0 = new ColumnConstraints();
         col0.setHalignment(HPos.LEFT);
         paneSerialPortSettingsInternalPane.getColumnConstraints().add(col0);
-        
+
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
-        paneSerialPortSettingsInternalPane.getColumnConstraints().add(col1);        
+        paneSerialPortSettingsInternalPane.getColumnConstraints().add(col1);
 
         Label lblPortName = new Label("Port");
         lblPortName.setMinWidth(80);
@@ -164,14 +162,22 @@ public class CommSettingsWindow extends Application {
 
         /* buttons area */
         Button btnApply = new Button("Apply");
+        btnApply.setDefaultButton(true);
         btnApply.setMinWidth(75);
         btnApply.setOnMouseClicked(event -> {
             btnApplyClickHandler();
         });
+        btnApply.setOnAction(event -> {
+            btnApplyClickHandler();
+        });
 
         Button btnCancel = new Button("Cancel");
+        btnCancel.setCancelButton(true);
         btnCancel.setMinWidth(75);
         btnCancel.setOnMouseClicked(event -> {
+            btnCancelClickHandler();
+        });
+        btnCancel.setOnAction(event -> {
             btnCancelClickHandler();
         });
 
@@ -206,7 +212,7 @@ public class CommSettingsWindow extends Application {
         terminalSettings.setPortStopBits(TerminalSettings.getPortStopBitsByUserName(chboxPortStopbits.getValue()));
         parentWindow.refreshTitle();
         parentWindow.refreshPortSettingsLabel();
-            
+
         thisStage.close();
     }
 

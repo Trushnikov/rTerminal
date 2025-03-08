@@ -7,7 +7,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -26,6 +25,12 @@ public class TerminalSettingsWindow extends Application {
 
     private final TerminalSettings terminalSettings;
     private final MainWindow parentWindow;
+    private Stage thisStage;
+    private final TextField txtBytesPerLine = new TextField();
+    private final ChoiceBox<String> chboxTerminalType = new ChoiceBox();
+    private final ChoiceBox<String> chboxTerminator = new ChoiceBox();
+    private final CheckBox chkDisplayMsgDirection = new CheckBox();
+    private final CheckBox chkDisplayTimeStamp = new CheckBox();
 
     public TerminalSettingsWindow(TerminalSettings settings, MainWindow window) {
         terminalSettings = settings;
@@ -34,6 +39,8 @@ public class TerminalSettingsWindow extends Application {
 
     @Override
     public void start(Stage stage) {
+        thisStage = stage;
+
         /* app icon */
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
@@ -55,20 +62,19 @@ public class TerminalSettingsWindow extends Application {
         commonSettingsPanelInternalPane.setMinWidth(320);
         commonSettingsPanelInternalPane.setHgap(10);
         commonSettingsPanelInternalPane.setVgap(5);
-        
+
         ColumnConstraints col0 = new ColumnConstraints();
         col0.setHalignment(HPos.LEFT);
         commonSettingsPanelInternalPane.getColumnConstraints().add(col0);
-        
+
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
-        commonSettingsPanelInternalPane.getColumnConstraints().add(col1);        
+        commonSettingsPanelInternalPane.getColumnConstraints().add(col1);
 
         Label lblTerminalType = new Label("Terminal type");
         lblTerminalType.setMinWidth(200);
         commonSettingsPanelInternalPane.add(lblTerminalType, 0, 0);
 
-        ChoiceBox<String> chboxTerminalType = new ChoiceBox();
         chboxTerminalType.setMinWidth(100);
         for (TerminalSettings.TerminalType type : TerminalSettings.TerminalType.values()) {
             chboxTerminalType.getItems().add(type.name());
@@ -79,7 +85,6 @@ public class TerminalSettingsWindow extends Application {
         Label lblTerminator = new Label("Line terminator");
         commonSettingsPanelInternalPane.add(lblTerminator, 0, 1);
 
-        ChoiceBox<String> chboxTerminator = new ChoiceBox();
         chboxTerminator.setMinWidth(100);
         commonSettingsPanelInternalPane.add(chboxTerminator, 1, 1);
         for (TerminalSettings.LineTerminator terminator : TerminalSettings.LineTerminator.values()) {
@@ -90,42 +95,37 @@ public class TerminalSettingsWindow extends Application {
         Label lblBytesPerLine = new Label("Bytes per line in binary mode");
         commonSettingsPanelInternalPane.add(lblBytesPerLine, 0, 2);
 
-        TextField txtBytesPerLine = new TextField(Integer.toString(terminalSettings.getBinaryBytesPerLine()));
+        txtBytesPerLine.setText(Integer.toString(terminalSettings.getBinaryBytesPerLine()));
         txtBytesPerLine.setMinWidth(100);
         commonSettingsPanelInternalPane.add(txtBytesPerLine, 1, 2);
 
-        CheckBox chkDisplayTimeStamp = new CheckBox("Display timestamp");
+        chkDisplayTimeStamp.setText("Display timestamp");
         chkDisplayTimeStamp.setSelected(terminalSettings.getDisplayTimestamp());
         commonSettingsPanelInternalPane.add(chkDisplayTimeStamp, 0, 3);
 
-        CheckBox chkDisplayMsgDirection = new CheckBox("Display message direction");
+        chkDisplayMsgDirection.setText("Display message direction");
         chkDisplayMsgDirection.setSelected(terminalSettings.getDisplayMsgDirection());
         commonSettingsPanelInternalPane.add(chkDisplayMsgDirection, 0, 4);
         commonSettingsPanel.setContent(commonSettingsPanelInternalPane);
-        
+
         /* buttons area */
         Button btnApply = new Button("Apply");
+        btnApply.setDefaultButton(true);
         btnApply.setMinWidth(75);
         btnApply.setOnMouseClicked(event -> {
-            int bytesPerLine = Integer.parseInt(txtBytesPerLine.getText());
-            if (bytesPerLine < TerminalSettings.BINARY_BYTES_PER_LINE_MIN || bytesPerLine > TerminalSettings.BINARY_BYTES_PER_LINE_MAX) {
-                return;
-            }
-
-            terminalSettings.setType(TerminalSettings.TerminalType.valueOf(chboxTerminalType.getValue()));
-            terminalSettings.setLineTerminator(TerminalSettings.LineTerminator.valueOf(chboxTerminator.getValue()));
-            terminalSettings.setDisplayTimestamp(chkDisplayTimeStamp.isSelected());
-            terminalSettings.setDisplayMsgDirection(chkDisplayMsgDirection.isSelected());
-            terminalSettings.setBinaryBytesPerLine(bytesPerLine);
-            terminalSettings.isChanged = true;
-            parentWindow.refreshTitle();
-            
-            stage.close();
+            btnApplyHandler();
+        });
+        btnApply.setOnAction(event -> {
+            btnApplyHandler();
         });
 
         Button btnCancel = new Button("Cancel");
+        btnCancel.setCancelButton(true);
         btnCancel.setMinWidth(75);
         btnCancel.setOnMouseClicked(event -> {
+            stage.close();
+        });
+        btnCancel.setOnAction(event -> {
             stage.close();
         });
 
@@ -150,6 +150,23 @@ public class TerminalSettingsWindow extends Application {
         stage.setAlwaysOnTop(true);
         stage.setTitle("Terminal Settings");
         stage.show();
+    }
+
+    private void btnApplyHandler() {
+        int bytesPerLine = Integer.parseInt(txtBytesPerLine.getText());
+        if (bytesPerLine < TerminalSettings.BINARY_BYTES_PER_LINE_MIN || bytesPerLine > TerminalSettings.BINARY_BYTES_PER_LINE_MAX) {
+            return;
+        }
+
+        terminalSettings.setType(TerminalSettings.TerminalType.valueOf(chboxTerminalType.getValue()));
+        terminalSettings.setLineTerminator(TerminalSettings.LineTerminator.valueOf(chboxTerminator.getValue()));
+        terminalSettings.setDisplayTimestamp(chkDisplayTimeStamp.isSelected());
+        terminalSettings.setDisplayMsgDirection(chkDisplayMsgDirection.isSelected());
+        terminalSettings.setBinaryBytesPerLine(bytesPerLine);
+        terminalSettings.isChanged = true;
+        parentWindow.refreshTitle();
+
+        thisStage.close();
     }
 
     public static void main(String[] args) {
