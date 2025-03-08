@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
-        <exec.mainClass>com.renesanco.rterminal.SplashWindow</exec.mainClass>
+        <exec.mainClass>com.renesanco.rterminal.MainWindow</exec.mainClass>
     </properties>
     <build>
         <sourceDirectory>src</sourceDirectory>
