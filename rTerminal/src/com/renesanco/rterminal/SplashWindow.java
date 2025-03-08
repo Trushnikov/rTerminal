@@ -40,7 +40,7 @@ public class SplashWindow extends Application {
         Pane pane = new Pane(backImage);
 
         Pane labelPane = new Pane();
-        Label lbl = new Label(AppSettings.APP_VERSION + " / Jan 2025");
+        Label lbl = new Label(AppSettings.APP_VERSION + " / Mar 2025");
         lbl.setAlignment(Pos.CENTER);
         lbl.setMinWidth(img.getWidth());
         labelPane.setStyle("-fx-background-color:transparent;");
