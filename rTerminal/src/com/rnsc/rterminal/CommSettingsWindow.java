@@ -140,7 +140,7 @@ public class CommSettingsWindow extends Application {
         paneSerialPortSettingsInternalPane.add(chboxPortStopbits, 1, 4);
 
         paneSerialPortSettings.setContent(paneSerialPortSettingsInternalPane);
-        paneSerialPortSettings.setStyle("-fx-background-color: green;");
+//        paneSerialPortSettings.setStyle("-fx-background-color: green;");
 
         /* TCP settings area */
 //        TitledPane paneTCPSettings = new TitledPane();
@@ -195,22 +195,23 @@ public class CommSettingsWindow extends Application {
         paneButtons.setAlignment(Pos.CENTER_RIGHT);
         paneButtons.getChildren().add(btnApply);
         paneButtons.getChildren().add(btnCancel);
-        paneButtons.setStyle("-fx-background-color: red;");
+//        paneButtons.setStyle("-fx-background-color: red;");
 
         /* common composer */
         BorderPane verticalPane = new BorderPane();
         BorderPane.setAlignment(paneSerialPortSettings, Pos.TOP_CENTER);
         verticalPane.setCenter(paneSerialPortSettings);
         verticalPane.setBottom(paneButtons);
-        verticalPane.setStyle("-fx-background-color: yellow;");
+//        verticalPane.setStyle("-fx-background-color: yellow;");
 
         var scene = new Scene(verticalPane);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
-        stage.setMinWidth(328);
+//        stage.setMinWidth(328);
         //stage.setMinHeight(275);
         stage.setMinHeight(verticalPane.getHeight() + paneButtons.getHeight());
         stage.setTitle("Communication Settings");
+        stage.setResizable(false);
         stage.setAlwaysOnTop(true);
         stage.show();
     }
