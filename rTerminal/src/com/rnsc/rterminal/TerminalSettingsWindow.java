@@ -130,7 +130,7 @@ public class TerminalSettingsWindow extends Application {
         });
 
         FlowPane paneButtons = new FlowPane();
-        paneButtons.setPadding(new Insets(5));
+        paneButtons.setPadding(new Insets(5, 5, 10, 5));
         paneButtons.setHgap(10);
         paneButtons.setAlignment(Pos.CENTER_RIGHT);
         paneButtons.getChildren().add(btnApply);
@@ -145,8 +145,9 @@ public class TerminalSettingsWindow extends Application {
         var scene = new Scene(verticalPane);
         scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
         stage.setScene(scene);
-        stage.setMinWidth(332);
-        stage.setMinHeight(260);
+//        stage.setMinWidth(332);
+//        stage.setMinHeight(260);
+        stage.setResizable(false);
         stage.setAlwaysOnTop(true);
         stage.setTitle("Terminal Settings");
         stage.show();
