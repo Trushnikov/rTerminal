@@ -1,4 +1,4 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
 public class Starter {
         public static void main(final String[] args) {

@@ -1,4 +1,4 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class AppSettings {
 
     public static final String APP_TITLE = "Terminal";
-    public static final String APP_VERSION = "v.1.0.5";
+    public static final String APP_VERSION = "v.1.0.6";
     public static final String EMPTY_LOCATION = "empty";
     public static final String EMPTY_MACRO = "<empty>";
     public static final String CONNECT = "Connect";
@@ -45,6 +45,7 @@ public class AppSettings {
                         line = br.readLine();
                     }
                     String settingsJsonString = sb.toString();
+                    
                     JSONObject settingsJson = new JSONObject(settingsJsonString);
                     lastTerminalSettingsFileLocation = settingsJson.getString("lastTerminalSettingsFileLocation");
                     for (int i = 0; i < recentTerminalSettingsFileLocations.length; i++) {

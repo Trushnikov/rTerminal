@@ -1,4 +1,4 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
 import java.awt.Taskbar;
 import javafx.application.Application;
@@ -18,6 +18,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javax.swing.ImageIcon;
 
+/**
+ * Окно редактирования макроса
+ */
 public class MacroEditorWindow extends Application {
 
     private final MainWindow parentWindow;
@@ -27,15 +30,14 @@ public class MacroEditorWindow extends Application {
     private TextField txtMacroText;
     private CheckBox chkPeriodic;
     private TextField txtMacroPeriod;
-    
-    public MacroEditorWindow(MainWindow parent){
+
+    public MacroEditorWindow(MainWindow parent) {
         parentWindow = parent;
     }
 
     @Override
     public void start(Stage stage) {
 
-        /* app icon */
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
 
         /* try to set icon in taskbar of MacOS */
@@ -114,6 +116,13 @@ public class MacroEditorWindow extends Application {
         stage.show();
     }
 
+    /**
+     * метод установки начальных значений в полях окна - параметры
+     * редактируемого макроса
+     *
+     * @param macroIdx индекс макроса в списке
+     * @param appSettings ссылка на объект настроек приложения
+     */
     public void setMacroData(int macroIdx, AppSettings appSettings) {
         selectedMacroIdx = macroIdx;
         currentAppSettings = appSettings;

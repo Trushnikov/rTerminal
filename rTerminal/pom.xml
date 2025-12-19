@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
-        <exec.mainClass>com.renesanco.rterminal.MainWindow</exec.mainClass>
+        <exec.mainClass>com.rnsc.rterminal.MainWindow</exec.mainClass>
     </properties>
     <build>
         <sourceDirectory>src</sourceDirectory>
@@ -35,7 +35,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.renesanco.rterminal.Starter</mainClass>
+                            <mainClass>com.rnsc.rterminal.Starter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -50,7 +50,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.renesanco.rterminal.Starter</mainClass>
+                            <mainClass>com.rnsc.rterminal.Starter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,14 +1,17 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
-import static com.renesanco.rterminal.TerminalSettings.LineTerminator.Lf;
+import static com.rnsc.rterminal.TerminalSettings.LineTerminator.Lf;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
+/**
+ * класс непосредственно терминала - отсылка сообщений в порт с заданными
+ * параметрами
+ */
 public class Terminal {
 
     private final TerminalSettings terminalSettings;
@@ -77,23 +80,31 @@ public class Terminal {
         }
     }
 
+    /**
+     * метод отправки сообщения в порт
+     *
+     * @param msg строка для отправки
+     * @throws Exception
+     */
     public void send(String msg) throws Exception {
-        switch (terminalSettings.getLineTerminator()) {
-            case Cr:
-                sp.writeString(msg + '\r');
-                break;
-            case Lf:
-                sp.writeString(msg + '\n');
-                break;
-            case CrLf:
-                sp.writeString(msg + "\r\n");
-                break;
-            case LfCr:
-                sp.writeString(msg + "\n\r");
-                break;
-            case None:
-                sp.writeString(msg);
-                break;
+        if (sp != null && sp.isOpened()) {
+            switch (terminalSettings.getLineTerminator()) {
+                case Cr:
+                    sp.writeString(msg + '\r');
+                    break;
+                case Lf:
+                    sp.writeString(msg + '\n');
+                    break;
+                case CrLf:
+                    sp.writeString(msg + "\r\n");
+                    break;
+                case LfCr:
+                    sp.writeString(msg + "\n\r");
+                    break;
+                case None:
+                    sp.writeString(msg);
+                    break;
+            }
         }
     }
 }

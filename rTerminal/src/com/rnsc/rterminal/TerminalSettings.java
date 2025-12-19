@@ -1,4 +1,4 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
 import java.io.BufferedReader;
 import java.io.File;

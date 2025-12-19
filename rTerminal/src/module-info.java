@@ -6,5 +6,5 @@ module rTerminal{
     requires java.desktop;
 //    requires javax.swing;
     
-    exports com.renesanco.rterminal;
+    exports com.rnsc.rterminal;
 }

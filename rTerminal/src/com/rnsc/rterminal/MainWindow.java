@@ -1,7 +1,6 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
 import java.awt.Taskbar;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -342,6 +341,12 @@ public class MainWindow extends Application {
         return pane;
     }
 
+    /**
+     * обработчик клика на текст макроса - вызов редактора макроса
+     *
+     * @param lblId идентификатор метки текста макроса для определения индекса
+     * макроса в списке
+     */
     private void macroLabelClickHandler(String lblId) {
         int idx = Integer.parseInt(lblId.substring(1));
         MacroEditorWindow wnd = new MacroEditorWindow(this);
@@ -349,10 +354,19 @@ public class MainWindow extends Application {
         wnd.setMacroData(idx, appSettings);
     }
 
+    /**
+     * обработчик кнопки макроса - вызов исполнения макроса
+     *
+     * @param btnId идентификатор кнопки вызова макроса для определения индекса
+     * макроса в списке
+     */
     private void macroButtonClickHandler(String btnId) {
         int idx = Integer.parseInt(btnId.substring(1));
         try {
-            sendMessageAndSaveToLog(appSettings.getMacro(idx).getText());
+            String macroText = appSettings.getMacro(idx).getText();
+            if (!macroText.equals(AppSettings.EMPTY_MACRO)) {
+                sendMessageAndSaveToLog(macroText);
+            }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -502,10 +516,16 @@ public class MainWindow extends Application {
         }
     }
 
+    /**
+     * метод отсылки сообщения
+     *
+     * @param msg тело макроса
+     */
     private void sendMessageAndSaveToLog(String msg) {
         try {
             terminal.send(msg);
             addTxMessageToLog(msg);
+            /* сохранение в список отосланных команд */
             if (!sentCommandsList.contains(msg)) {
                 sentCommandsList.add(msg);
             }

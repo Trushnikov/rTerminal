@@ -1,4 +1,4 @@
-package com.renesanco.rterminal;
+package com.rnsc.rterminal;
 
 import java.awt.Taskbar;
 import javafx.application.Application;
